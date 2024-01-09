@@ -1,10 +1,45 @@
-'use strict';
+/*
+ *
+ *
+ *       Complete the API routing below
+ *
+ *
+ */
 
-const expect = require('chai').expect;
-const ConvertHandler = require('../controllers/convertHandler.js');
+"use strict";
+
+var ConvertHandler = require("../controllers/convertHandler.js");
 
 module.exports = function (app) {
-  
-  let convertHandler = new ConvertHandler();
+  var convertHandler = new ConvertHandler();
 
+  app.route("/api/convert").get(function (req, res) {
+    var input = req.query.input;
+    var initNum = convertHandler.getNum(input);
+    var initUnit = convertHandler.getUnit(input);
+    var returnNum = convertHandler.convert(initNum, initUnit);
+    var returnUnit = convertHandler.getReturnUnit(initUnit);
+    var toString = convertHandler.getString(
+      initNum,
+      initUnit,
+      returnNum,
+      returnUnit
+    );
+
+    if (initUnit == "invalid unit" && initNum == "invalid number") {
+      return res.json("invalid number and unit");
+    } else if (initUnit == "invalid unit") {
+      return res.json(initUnit);
+    } else if (initNum == "invalid number") {
+      return res.json(initNum);
+    } else {
+      return res.json({
+        initNum: initNum,
+        initUnit: initUnit,
+        returnNum: returnNum,
+        returnUnit: returnUnit,
+        string: toString,
+      });
+    }
+  });
 };
