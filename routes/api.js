@@ -96,7 +96,10 @@ module.exports = (app) => {
         (issue) => issue._id === _id
       );
       var issueToUpdate = projectName.issues[issueIndex];
-      if (!issueToUpdate)
+      if (
+        !Object.keys(req.body).filter((key) => key === "_id").length ||
+        !req.body._id
+      )
         return res.status(400).json({
           error: "missing _id",
         });
@@ -105,21 +108,29 @@ module.exports = (app) => {
           error: "no update field(s) sent",
           _id,
         });
-      for (let field in req.body) {
-        if (field !== "open" && field !== "_id")
-          issueToUpdate[field] = req.body[field];
-        else if (field === "open")
-          issueToUpdate[field] = req.body[field] === "true";
-      }
-      issueToUpdate.updated_on = new Date();
-      projectName.markModified("issues");
-      projectName.save((err, updatedProject) => {
-        if (err) res.status(400).send(`could not update ${_id}`), next(err);
-        return res.status(200).json({
-          result: "successfully updated",
-          _id: _id,
+      try {
+        for (let field in req.body) {
+          if (field !== "open" && field !== "_id")
+            issueToUpdate[field] = req.body[field];
+          else if (field === "open")
+            issueToUpdate[field] = req.body[field] === "true";
+        }
+        issueToUpdate.updated_on = new Date();
+        projectName.markModified("issues");
+        projectName.save((err, updatedProject) => {
+          if (err) res.status(400).send(`could not update ${_id}`), next(err);
+          return res.status(200).json({
+            result: "successfully updated",
+            _id: _id,
+          });
         });
-      });
+      } catch (err) {
+        console.log(err);
+        res.status(200).json({
+          error: "could not update",
+          _id,
+        });
+      }
     });
   });
 
