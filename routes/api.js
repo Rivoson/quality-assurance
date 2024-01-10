@@ -62,7 +62,7 @@ module.exports = (app) => {
     };
     var newProject = new Project({ project });
     if (!issue_title | !issue_text | !created_by)
-      return res.status(200).send("missing inputs");
+      return res.status(200).json({ error: "required field(s) missing" });
     Project.findOne({ project }, (err, projectName) => {
       if (err) next(err);
       if (projectName) {
