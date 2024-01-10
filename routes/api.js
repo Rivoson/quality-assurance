@@ -96,7 +96,10 @@ module.exports = (app) => {
         (issue) => issue._id === _id
       );
       var issueToUpdate = projectName.issues[issueIndex];
-      if (!issueToUpdate) return res.status(400).send("No update field sent");
+      if (!issueToUpdate)
+        return res.status(400).json({
+          error: "missing _id",
+        });
       for (let field in req.body) {
         if (field !== "open" && field !== "_id")
           issueToUpdate[field] = req.body[field];

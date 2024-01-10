@@ -109,7 +109,7 @@ suite("Functional Tests", function () {
         .send()
         .end((err, res) => {
           assert.equal(res.status, 400);
-          assert.equal(res.text, "No update field sent");
+          assert.equal(res.body.error, "missing _id");
           done();
         });
     });
