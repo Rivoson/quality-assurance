@@ -115,6 +115,18 @@ suite("Functional Tests", function () {
               done();
             });
         });
+
+        test("Test POST /api/books/[id] without comment", function (done) {
+          chai
+            .request(server)
+            .post(`/api/books/${_id}`)
+            .send({})
+            .end((err, res) => {
+              assert.equal(res.status, 200);
+              assert.equal(res.text, "missing required field comment");
+              done();
+            });
+        });
       }
     );
   });

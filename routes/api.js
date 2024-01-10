@@ -81,6 +81,8 @@ module.exports = function (app) {
       var _id = req.params.id;
       var comment = req.body.comment;
       if (!ObjectId.isValid(_id)) return res.status(200).send("no book exists");
+      if (!comment)
+        return res.status(200).send("missing required field comment");
       Library.findOneAndUpdate(
         { _id: ObjectId(_id) },
         {
