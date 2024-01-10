@@ -100,6 +100,11 @@ module.exports = (app) => {
         return res.status(400).json({
           error: "missing _id",
         });
+      if (!Object.keys(req.body).filter((key) => key !== "_id").length)
+        return res.status(200).json({
+          error: "no update field(s) sent",
+          _id,
+        });
       for (let field in req.body) {
         if (field !== "open" && field !== "_id")
           issueToUpdate[field] = req.body[field];
