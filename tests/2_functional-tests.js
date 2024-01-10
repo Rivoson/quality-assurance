@@ -102,14 +102,14 @@ suite("Functional Tests", function () {
   });
 
   suite("PUT /api/issues/{project} => text", function () {
-    test("No body", function (done) {
+    test("No fields", function (done) {
       chai
         .request(server)
         .put("/api/issues/test")
-        .send()
+        .send({ _id })
         .end((err, res) => {
-          assert.equal(res.status, 400);
-          assert.equal(res.body.error, "missing _id");
+          assert.equal(res.status, 200);
+          assert.equal(res.body.error, "no update field(s) sent");
           done();
         });
     });
@@ -144,6 +144,32 @@ suite("Functional Tests", function () {
           assert.equal(res.status, 200);
           assert.equal(res.body.result, "successfully updated");
           assert.equal(res.body._id, _id);
+          done();
+        });
+    });
+
+    test("missing _id", function (done) {
+      chai
+        .request(server)
+        .put("/api/issues/test")
+        .send({ _id: "" })
+        .end((err, res) => {
+          assert.equal(res.status, 400);
+          assert.equal(res.body.error, "missing _id");
+          done();
+        });
+    });
+
+    test("Invalid _id", function (done) {
+      const __id = "659e5dcce2dcfc001a9e4ef";
+      chai
+        .request(server)
+        .put("/api/issues/test")
+        .send({ _id: __id, status_text: "test invalid _id" })
+        .end((err, res) => {
+          assert.equal(res.status, 200);
+          assert.equal(res.body.error, "could not update");
+          assert.equal(res.body._id, __id);
           done();
         });
     });
@@ -249,6 +275,20 @@ suite("Functional Tests", function () {
           assert.equal(res.status, 200);
           assert.equal(res.body.result, "successfully deleted");
           assert.equal(res.body._id, _id);
+          done();
+        });
+    });
+
+    test("Invalid _id", function (done) {
+      const __id = "659e5dcce2dcfc001a9e4ef";
+      chai
+        .request(server)
+        .delete("/api/issues/test")
+        .send({ _id: __id })
+        .end((err, res) => {
+          assert.equal(res.status, 400);
+          assert.equal(res.body.error, "could not delete");
+          assert.equal(res.body._id, __id);
           done();
         });
     });
