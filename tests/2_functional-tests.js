@@ -127,6 +127,18 @@ suite("Functional Tests", function () {
               done();
             });
         });
+
+        test("Test POST /api/books/[id] book not existing", function (done) {
+          chai
+            .request(server)
+            .post(`/api/books/659eac6cc8b11d3f33da43b`)
+            .send({ comment: "Quality Assurance is Key" })
+            .end((err, res) => {
+              assert.equal(res.status, 200);
+              assert.equal(res.text, "no book exists");
+              done();
+            });
+        });
       }
     );
   });
