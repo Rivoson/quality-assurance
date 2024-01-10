@@ -141,5 +141,29 @@ suite("Functional Tests", function () {
         });
       }
     );
+
+    suite("DELETE /api/books/[id] => delete book with id", function () {
+      test("Test DELETE /api/books/[id] with existing id", function (done) {
+        chai
+          .request(server)
+          .delete(`/api/books/${_id}`)
+          .end((err, res) => {
+            assert.equal(res.status, 200);
+            assert.equal(res.text, "delete successful");
+            done();
+          });
+      });
+
+      test("Test DELETE /api/books/[id] with an id that doesn't exist", function (done) {
+        chai
+          .request(server)
+          .delete(`/api/books/659eac6cc8b11d3f33da43b`)
+          .end((err, res) => {
+            assert.equal(res.status, 200);
+            assert.equal(res.text, "no book exists");
+            done();
+          });
+      });
+    });
   });
 });
