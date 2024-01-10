@@ -137,7 +137,10 @@ module.exports = (app) => {
   app.delete("/api/issues/:project", (req, res, next) => {
     var { project } = req.params;
     var { _id } = req.body;
-    if (!_id) return res.status(400).send("_id error");
+    if (!_id)
+      return res.status(200).json({
+        error: "missing _id",
+      });
     Project.findOne({ project }, async (err, projectName) => {
       if (err) next(err);
       if (!projectName)
@@ -152,8 +155,9 @@ module.exports = (app) => {
       projectName.save((err, updatedProject) => {
         if (err) next(err);
         if (projectName.issues.length === issuesLength)
-          return res.status(400).send(`could not delete ${_id}`);
-        else return res.status(200).send(`deleted ${_id}`);
+          return res.status(400).json({ error: "could not delete", _id });
+        else
+          return res.status(200).json({ result: "successfully deleted", _id });
       });
     });
   });

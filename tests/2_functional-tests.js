@@ -234,8 +234,8 @@ suite("Functional Tests", function () {
         .delete("/api/issues/test")
         .query({})
         .end((err, res) => {
-          assert.equal(res.status, 400);
-          assert.equal(res.text, "_id error");
+          assert.equal(res.status, 200);
+          assert.equal(res.body.error, "missing _id");
           done();
         });
     });
@@ -247,7 +247,8 @@ suite("Functional Tests", function () {
         .send({ _id })
         .end((err, res) => {
           assert.equal(res.status, 200);
-          assert.equal(res.text, `deleted ${_id}`);
+          assert.equal(res.body.result, "successfully deleted");
+          assert.equal(res.body._id, _id);
           done();
         });
     });
