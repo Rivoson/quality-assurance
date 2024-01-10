@@ -124,7 +124,8 @@ suite("Functional Tests", function () {
         })
         .end((err, res) => {
           assert.equal(res.status, 200);
-          assert.equal(res.text, "successfully updated");
+          assert.equal(res.body.result, "successfully updated");
+          assert.equal(res.body._id, _id);
           done();
         });
     });
@@ -141,7 +142,8 @@ suite("Functional Tests", function () {
         })
         .end((err, res) => {
           assert.equal(res.status, 200);
-          assert.equal(res.text, "successfully updated");
+          assert.equal(res.body.result, "successfully updated");
+          assert.equal(res.body._id, _id);
           done();
         });
     });

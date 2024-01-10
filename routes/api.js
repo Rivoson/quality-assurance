@@ -107,7 +107,10 @@ module.exports = (app) => {
       projectName.markModified("issues");
       projectName.save((err, updatedProject) => {
         if (err) res.status(400).send(`could not update ${_id}`), next(err);
-        return res.status(200).send("successfully updated");
+        return res.status(200).json({
+          result: "successfully updated",
+          _id: _id,
+        });
       });
     });
   });
